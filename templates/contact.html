@@ -1,0 +1,42 @@
+{# 
+    Template: contact.html
+
+    Description: 
+    This template extends the base layout and provides a contact page for Thumbot. 
+    It includes contact information and instructions but does not include a contact form.
+
+    Extends:
+    - base.html: The base template that includes common layout elements.
+
+    Blocks:
+    - content: Overrides the content block in the base template to provide specific content for this page.
+
+    Elements:
+    - Header: Displays the "Get in Touch" title and a brief introduction.
+    - Contact Information: Provides additional instructions and contact methods for users.
+#}
+
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="text-center mb-4">Get in Touch</h1>
+    <p class="text-center mb-5">Contact us using the information below. We'll respond promptly to your inquiries and feedback.</p>
+
+    <div class="row">
+        <div class="col-md-12">
+            <h2>How Can We Help?</h2>
+            <p>If you have any questions or need assistance, please don't hesitate to contact us. Our team will review your message and get back to you as soon as possible. You can expect a response within 24-48 hours via email.</p>
+            <p>Thank you for reaching out to us. We look forward to assisting you!</p>
+        </div>
+        <div class="col-md-12">
+            <h2>Additional Instructions</h2>
+            <p>If you need assistance with your order, support, or have any feedback, please use the following contact methods:</p>
+            <ul>
+                <li>Email: <a href="mailto:support@example.com">support@ask_gulam.com</a></li>
+                <li>Phone: 0000000000000</li>
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thumbnail Generator</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <style>
+        /* Custom styles for the loader */
+        .loader {
+            border: 16px solid #f3f3f3; /* Light grey */
+            border-top: 16px solid #3498db; /* Blue */
+            border-radius: 50%;
+            width: 120px;
+            height: 120px;
+            animation: spin 1.5s linear infinite;
+            position: absolute;
+            top: 50%; 
+            left: 50%;
+            transform: translate(-60%, -50%); 
+            display: none; 
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Custom styles for the back button */
+        .back-button {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+        }
+
+        /* Adjust the main container margin to accommodate the back button */
+        .container {
+            margin-top: 80px; 
+        }
+    </style>
+</head>
+<body>
+    <!-- Loader -->
+    <div id="loader" class="loader" style="display: none;"></div>
+
+    <div class="container mt-5">
+        <!-- Back Button -->
+        <a href="javascript:history.back()" class="btn btn-primary back-button">Back</a>
+
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <h2 class="text-center mb-4">Thumbnail Generator</h2>
+
+                <!-- Form for thumbnail generation -->
+                <form id="thumbnailForm">
+                    <div class="form-group">
+                        <label for="promptInput">Enter a description for your thumbnail:</label>
+                        <input type="text" class="form-control" id="promptInput" name="prompt" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">Generate Thumbnail</button>
+                </form>
+
+                <!-- Thumbnail Result -->
+                <div id="thumbnailResult" class="mt-4" style="display: none;">
+                    <h3 class="text-center">Generated Thumbnail</h3>
+                    <img id="generatedThumbnail" src="" alt="Generated Thumbnail" class="img-fluid">
+                    <div class="text-center mt-3">
+                        <a id="downloadButton" href="#" class="btn btn-success" download="thumbnail.png">Download Thumbnail</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Optional JavaScript -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+    <script>
+    document.getElementById('thumbnailForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+        const prompt = document.getElementById('promptInput').value;
+
+        // Show loader and hide result initially
+        document.getElementById('loader').style.display = 'block';
+        document.getElementById('thumbnailResult').style.display = 'none';
+
+        fetch('/thumbnail_generator', {  
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ prompt: prompt })
+        })
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('loader').style.display = 'none';
+            if (data.image_url) {
+                document.getElementById('generatedThumbnail').src = data.image_url;
+                document.getElementById('downloadButton').href = data.image_url;
+                document.getElementById('thumbnailResult').style.display = 'block';
+            } else {
+                alert('Failed to generate thumbnail: ' + data.error);
+            }
+        })
+        .catch(error => {
+            document.getElementById('loader').style.display = 'none';
+            console.error('Error:', error);
+            alert('Failed to process your request.');
+        });
+    });
+    </script>
+</body>
+</html>
